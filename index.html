@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Explorer - Find Your Perfect Brew</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="asset/Logo.png" alt="MochaMap Logo" class="logo">
+            <div class="brand-text">
+                <h1>MochaMap</h1>
+                <p>Discover the perfect coffee spots in your neighborhood</p>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Coffee Carousel Section -->
+    <section class="coffee-carousel">
+        <div class="carousel-header">
+            <h2>Explore Coffee Varieties</h2>
+            <p>Discover different types of coffee from around the world</p>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-track" id="carouselTrack">
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/EspressoCoffee.jpg" alt="Espresso">
+                    </div>
+                    <div class="coffee-name">Espresso</div>
+                    <div class="coffee-description">Rich, concentrated coffee shot with a bold flavor and creamy crema on top.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/Cappuccino.jpg" alt="Cappuccino">
+                    </div>
+                    <div class="coffee-name">Cappuccino</div>
+                    <div class="coffee-description">Perfect balance of espresso, steamed milk, and thick milk foam in equal parts.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/IcedAmericano.jpg" alt="Americano">
+                    </div>
+                    <div class="coffee-name">Americano</div>
+                    <div class="coffee-description">Espresso shots diluted with hot water, creating a lighter coffee similar to drip coffee.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/Mocha%20Coffee.jpg" alt="Mocha">
+                    </div>
+                    <div class="coffee-name">Mocha</div>
+                    <div class="coffee-description">Decadent blend of espresso, chocolate syrup, and steamed milk topped with whipped cream.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/lattecup.jpg" alt="Latte">
+                    </div>
+                    <div class="coffee-name">Latte</div>
+                    <div class="coffee-description">Smooth espresso with lots of steamed milk and a light layer of milk foam.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/HazelNut.jpg" alt="HazelNut">
+                    </div>
+                    <div class="coffee-name">HazelNut</div>
+                    <div class="coffee-description">Espresso infused with rich, nutty hazelnut flavor.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/Frappe.jpg" alt="Frappe">
+                    </div>
+                    <div class="coffee-name">Frappé</div>
+                    <div class="coffee-description">Iced coffee drink blended with milk and topped with whipped cream and ice.</div>
+                </div>
+                <div class="coffee-card">
+                    <div class="coffee-icon">
+                        <img src="asset/Dalgona.jpg" alt="Dalgona">
+                    </div>
+                    <div class="coffee-name">Dalgona Coffee</div>
+                    <div class="coffee-description">Whipped coffee cloud over chilled milk.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-nav">
+            <button class="carousel-btn" id="prevBtn" onclick="moveCarousel(-1)" aria-label="Previous coffee">‹</button>
+            <button class="carousel-btn" id="nextBtn" onclick="moveCarousel(1)" aria-label="Next coffee">›</button>
+        </div>
+
+        <!-- Coffee Fun Facts -->
+        <div class="coffee-facts">
+            <div class="fact-item">
+                <span class="fact-number" id="factNumber">2.25</span>
+                <span class="fact-label">Billion cups consumed daily</span>
+            </div>
+            <div class="fact-item">
+                <span class="fact-number">25</span>
+                <span class="fact-label">Million coffee farmers worldwide</span>
+            </div>
+            <div class="fact-item">
+                <span class="fact-number">70+</span>
+                <span class="fact-label">Countries grow coffee</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-container">
+        <div class="search-box">
+            <div class="input-wrapper">
+                <input type="text" id="locationInput" class="search-input" placeholder="Enter your location (e.g., New York, London, Paris...)">
+                <span class="input-icon">📍</span>
+            </div>
+            <button onclick="searchCafes()" class="btn btn-primary">
+                <span class="btn-text">Find Coffee Shops</span>
+                <span class="btn-icon">🔍</span>
+            </button>
+            <button onclick="findNearby()" class="btn btn-secondary">
+                <span class="btn-text">Near Me</span>
+                <span class="btn-icon">📍</span>
+            </button>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="specialtyFilter">Specialty</label>
+                <select id="specialtyFilter" class="filter-select">
+                    <option value="">All Types</option>
+                    <option value="coffee">Coffee Shop</option>
+                    <option value="cafe">Cafe</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="roastery">Roastery</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="radiusFilter">Distance</label>
+                <select id="radiusFilter" class="filter-select">
+                    <option value="1000">1 km</option>
+                    <option value="2000" selected>2 km</option>
+                    <option value="5000">5 km</option>
+                    <option value="10000">10 km</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sortFilter">Sort By</label>
+                <select id="sortFilter" class="filter-select">
+                    <option value="distance">Distance</option>
+                    <option value="name">Name</option>
+                    <option value="rating">Rating</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-container">
+        <div id="map" role="application" aria-label="Interactive map showing coffee shops"></div>
+        <div class="map-controls">
+            <button id="fullscreenBtn" class="map-control-btn" onclick="toggleFullscreen()" aria-label="Toggle fullscreen">⛶</button>
+            <button id="centerBtn" class="map-control-btn" onclick="centerOnUser()" aria-label="Center on your location">🎯</button>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-container">
+        <div class="results-header-section">
+            <h2 class="results-header">Coffee Discoveries</h2>
+            <div class="results-stats" id="resultsStats" style="display: none;">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCafes">0</span>
+                    <span class="stat-label">Coffee Shops Found</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="avgRating">0</span>
+                    <span class="stat-label">Average Rating</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="openNow">0</span>
+                    <span class="stat-label">Open Now</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="results">
+            <div class="loading">
+                <div class="coffee-loader"></div>
+                <div class="loading-text">Ready to explore coffee shops in your area!</div>
+                <div class="loading-subtext">Use the search above to find amazing coffee spots</div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination" style="display: none;">
+            <button class="pagination-btn" id="prevPage" onclick="changePage(-1)">‹ Previous</button>
+            <span class="page-info" id="pageInfo">Page 1 of 1</span>
+            <button class="pagination-btn" id="nextPage" onclick="changePage(1)">Next ›</button>
+        </div>
+    </section>
+
+    <!-- Coffee Tips Section -->
+    <section class="coffee-tips">
+        <h3>Coffee Tips & Tricks</h3>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-icon">🌡️</div>
+                <div class="tip-title">Perfect Temperature</div>
+                <div class="tip-content">The ideal brewing temperature for coffee is between 195°F and 205°F (90°C-96°C).</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">⏱️</div>
+                <div class="tip-title">Brewing Time</div>
+                <div class="tip-content">Espresso: 25-30 seconds, Pour-over: 4-6 minutes, French Press: 4 minutes.</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">⚖️</div>
+                <div class="tip-title">Coffee Ratio</div>
+                <div class="tip-content">Use a 1:15 to 1:17 ratio (coffee to water) for optimal extraction and flavor.</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">🫘</div>
+                <div class="tip-title">Fresh Beans</div>
+                <div class="tip-content">Use coffee beans within 2-4 weeks of the roast date for best flavor.</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner">
+        <div class="coffee-loader large"></div>
+        <div class="loading-text">Brewing your coffee search...</div>
+    </div>
+</div>
+
+<!-- Toast Notifications -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2025 Mocha-Map.Made with Strong Mind & Coffee </p>
+        <div class="footer-links">
+            <a href="#" onclick="showAbout()">About</a>
+            <a href="#" onclick="showContact()">Contact</a>
+            <a href="#" onclick="showPrivacy()">Privacy</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Custom JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
